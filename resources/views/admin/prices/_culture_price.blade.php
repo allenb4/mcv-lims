@@ -1,0 +1,1 @@
+<input type="number" name="" id="culture_{{$culture['id']}}" value="{{$culture['price']}}" class="form-control culture_price" culture_id="{{$culture['id']}}">

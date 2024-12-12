@@ -1,0 +1,12 @@
+body{
+    direction: rtl;
+}
+
+.label-input100{
+    padding-right: 24px!important;
+    padding-left: unset!important;
+}
+
+body{
+    overflow-x: hidden;
+}

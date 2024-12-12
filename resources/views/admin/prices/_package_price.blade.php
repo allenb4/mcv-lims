@@ -1,0 +1,1 @@
+<input type="number" name="" id="package_{{$package['id']}}" value="{{$package['price']}}" class="form-control package_price" package_id="{{$package['id']}}">

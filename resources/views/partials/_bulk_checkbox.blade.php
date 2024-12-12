@@ -1,0 +1,1 @@
+<input type="checkbox" name="" class="bulk_checkbox" id="" value="{{$item['id']}}">

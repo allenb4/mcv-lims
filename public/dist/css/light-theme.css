@@ -1,0 +1,248 @@
+.card-primary:not(.card-outline)>.card-header,.card.card-danger .card-header,.card.card-success .card-header{
+    background-color: white!important;
+    box-shadow: unset!important;
+    color: black;
+}
+
+[class*=sidebar-dark-]{
+    background-color: white!important;
+    color: black!important;
+}
+
+[class*=sidebar-dark] .brand-link{
+    color: black!important;
+}
+
+[class*=sidebar-dark-] .sidebar a{
+    color: black!important;
+}
+
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active{
+    background-color:#7367f0!important;
+    color: white!important;
+}
+
+
+.text-primary{
+    color: #5e50ee!important;  
+  }
+  
+  .text-success{
+      color: #28c76f!important;
+  }
+  
+  .text-warning{
+      color: #ff9f43!important;  
+  }
+  
+  .text-danger{
+      color: #ea5455!important; 
+  }
+  
+  .text-info{
+    color: #00cfe8!important;  
+  }
+  
+  .daterangepicker .ranges li.active,.daterangepicker td.active, .daterangepicker td.active:hover{
+      background: linear-gradient(118deg,#7367f0,rgba(115,103,240,.7))!important;
+  }
+  
+  .select2-container--default .select2-results__option--highlighted[aria-selected]{
+    background-color: #5e50ee!important;  
+  }
+  .card-primary.card-outline{
+    border-top: unset!important;
+  }
+
+  
+.table.btn-primary,.dataTable thead{
+    background-color:#f3f2f7!important;
+    color: black!important;
+    box-shadow: unset!important;
+}
+
+.badge-primary{
+    background-color: #7367f0!important;
+}
+
+.btn-default{
+    border-color: #82868b!important;
+    background-color: #82868b!important;
+    box-shadow: unset!important;
+    color: white!important;
+}
+
+.btn-primary{
+    border-color: #7367f0!important;
+    background-color: #7367f0!important;
+    box-shadow: unset!important;
+    color: white!important;
+}
+
+.btn-secondary{
+    border-color: #82868b!important;
+    background-color: #82868b!important;
+    box-shadow: unset!important;
+    color: white!important;
+}
+
+.btn-success{
+    border-color: #28c76f!important;
+    background-color: #28c76f!important;
+    box-shadow: unset!important;
+    color: white!important;
+}
+
+.btn-warning{
+    border-color: #ff9f43!important;
+    background-color: #ff9f43!important;
+    box-shadow: unset!important;
+}
+
+.btn-danger{
+    border-color: #ea5455!important;
+    background-color: #ea5455!important;
+    box-shadow: unset!important; 
+    color: white!important;
+}
+
+.btn-info{
+    border-color: #00cfe8!important;
+    background-color: #00cfe8!important;
+    box-shadow: unset!important; 
+    color: white!important;
+}
+
+.btn-default:hover{
+    box-shadow:  0 8px 25px -8px #82868b!important;
+ }
+
+ .btn-info:hover{
+    box-shadow:  0 8px 25px -8px #00cfe8!important;
+ }
+.btn-primary:hover{
+   box-shadow:  0 8px 25px -8px #7367f0!important;
+}
+
+.btn-secondary:hover{
+    box-shadow:  0 8px 25px -8px #82868b!important;
+ }
+
+ .btn-success:hover{
+    box-shadow:  0 8px 25px -8px #28c76f!important;
+ }
+
+ .btn-danger:hover{
+    box-shadow:  0 8px 25px -8px #ea5455!important;
+ }
+
+
+
+.error {
+    color: #ea5455!important;
+}
+
+
+.page-link{
+    background-color: #484286!important;
+    border-color: #484286!important;
+    color: white!important;
+}
+
+.page-item.active .page-link{
+    background-color: #7367f0!important;
+    border-color: #7367f0!important;
+    color: white!important;
+    box-shadow: 0 10px 20px -10px #7367f0!important
+}
+
+
+.table-bordered thead{
+    background-color: #f3f2f7;
+    color: black!important;
+}
+
+#receipt_table tr{
+    border-bottom: 2px solid transparent!important;
+}
+
+.card-tools .btn-tool{
+    color: black!important;
+}
+
+[class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active, [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active:focus, [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link.active:hover{
+    color: white!important;
+}
+
+.nav.flex-column.nav-tabs a{
+    color: black!important;
+}
+
+.nav-tabs.flex-column .nav-link.active{
+    background-color: #7367f0!important;
+    border-color: #7367f0!important;
+    color: white!important;
+}
+
+.breadcrumb a, .breadcrumb li{
+    color: black!important;
+}
+
+.navbar-dark, footer{
+    color: black!important;
+    background-color: white!important;
+    /* box-shadow:  0 2px 15px -8px #82868b!important; */
+    /* border-bottom: .1px solid; */
+}
+.navbar-dark{
+    border-bottom: .1px solid #D3D3D3;
+}
+footer{
+    border-top: .1px solid #D3D3D3!important;
+}
+
+.navbar-dark .navbar-nav .nav-link{
+    color: black!important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+    background-color: #7367f0!important;
+}
+
+.card-primary .card-tabs .card-header{
+    background-color: #7367f0!important;
+    color: white!important;
+}
+
+table.dataTable td, table.dataTable th{
+    border-top: unset!important;
+}
+
+.table-bordered th,.table-bordered td{
+    border:unset!important;
+}
+
+.table-bordered thead tr th, table.dataTable th{
+    border-bottom: .1px solid black!important;
+    border-top: .1px solid black!important;
+}
+
+table .card.card-primary.card-outline .card-header{
+    color: black!important;
+}
+
+.content-wrapper{
+    background-color: #F8F8F8!important;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+    background-color: #7367f0!important;
+}
+
+.online_admins_list a{
+    color:black!important;
+}
+
+.online_patients_list a{
+    color:black!important;
+}
