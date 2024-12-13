@@ -138,71 +138,6 @@ class GroupsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-    //  public function store(GroupRequest $request)
-    //  {
-    //      DB::beginTransaction();
-     
-    //      try {
-    //          // Step 1: Create Group
-    //          $group = Group::create($request->except('_token', 'tests', 'cultures', 'packages', 'payments', 'DataTables_Table_0_length', 'DataTables_Table_1_length', 'DataTables_Table_2_length'));
-     
-    //          $group->update([
-    //              'branch_id' => session('branch_id'),
-    //              'created_by' => auth()->guard('admin')->user()->id,
-    //          ]);
-     
-    //          // Other steps (tests, cultures, packages, payments, etc.)
-    //          generate_barcode($group->id);
-    //          $this->assign_tests_report($group->id);
-    //          $this->assign_consumption($group->id);
-    //          group_test_calculations($group->id);
-     
-    //          DB::commit();
-          
-    //         //  try {
-    //         //      // Post-commit logic
-    //         //      $group = Group::with([
-    //         //          'tests',
-    //         //          'cultures', 
-    //         //          'all_tests',
-    //         //          'all_cultures',
-    //         //          'packages',
-    //         //          'patient',
-    //         //          'doctor',
-    //         //          'branch',
-    //         //          'contract',
-    //         //          'payments',
-    //         //          'payments.payment_method',
-    //         //          'consumptions',
-    //         //          'created_by_user',
-    //         //          'signed_by_user',
-    //         //      ])->findOrFail($group->id);
-     
-    //         //      \Log::info(['groupData' => $group->toArray()]);
-     
-    //         //      // Generate PDF
-    //         //      $pdf = generate_pdf($group->toArray(), 2);
-    //         //      if ($pdf) {
-    //         //          $group->update(['receipt_pdf' => $pdf]);
-    //         //      }
-     
-    //         //      // Notify Patient
-    //         //      $patient = Patient::find($group->patient_id);
-    //         //      send_notification('patient_code', $patient);
-    //         //  } catch (\Exception $e) {
-    //         //      \Log::error('Post-commit logic failed: ' . $e->getMessage());
-    //         //  }
-     
-    //         session()->flash('success', __('Group saved successfully'));
-
-    //          return redirect()->route('admin.groups.show', $group->id);
-    //      } catch (\Exception $e) {
-    //          DB::rollBack();
-    //          return redirect()->back()->withErrors(['error' => $e->getMessage()]);
-    //      }
-    //  }
-     
      public function store(GroupRequest $request)
      {
         $group=Group::create($request->except('_token','tests','cultures','packages','payments','DataTables_Table_0_length','DataTables_Table_1_length','DataTables_Table_2_length'));
@@ -322,12 +257,12 @@ class GroupsController extends Controller
         $group=Group::find($group['id']);
         
         // Generating Receipt is not working
-        // $pdf=generate_pdf($group,2);
+        $pdf=generate_pdf($group,2);
  
-        // if(isset($pdf))
-        // {
-        //    $group->update(['receipt_pdf'=>$pdf]);
-        // }
+        if(isset($pdf))
+        {
+           $group->update(['receipt_pdf'=>$pdf]);
+        }
  
         //send notification with the patient code
         $patient=Patient::find($group['patient_id']);
@@ -592,12 +527,12 @@ class GroupsController extends Controller
             ])->where('id',$id)->first();
         
         // Generating Receipt for Invoice is not working
-        // $pdf=generate_pdf($group->toArray(),2);
+        $pdf=generate_pdf($group->toArray(),2);
        
-        // if(isset($pdf))
-        // {
-        //     $group->update(['receipt_pdf'=>$pdf]);
-        // }
+        if(isset($pdf))
+        {
+            $group->update(['receipt_pdf'=>$pdf]);
+        }
 
         //send notification with the patient code
         $patient=Patient::find($group['patient_id']);

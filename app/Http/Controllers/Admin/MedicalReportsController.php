@@ -397,15 +397,15 @@ class MedicalReportsController extends Controller
         }
 
         // Generate Medical Report PDF is not working properly
-        // $pdf=generate_pdf([
-        //     'categories'=>$categories,
-        //     'group'=>$group,
-        // ]);
+        $pdf=generate_pdf([
+            'categories'=>$categories,
+            'group'=>$group,
+        ]);
 
-        // if(isset($pdf))
-        // {
-        //     $group->update(['report_pdf'=>$pdf]);
-        // }
+        if(isset($pdf))
+        {
+            $group->update(['report_pdf'=>$pdf]);
+        }
       
         session()->flash('success',__('Test result saved successfully'));
 

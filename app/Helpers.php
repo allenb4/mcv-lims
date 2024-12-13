@@ -68,15 +68,15 @@ if (!function_exists("generate_pdf")) {
                 $group = $data['group'];
                 $categories = $data['categories'];
                 $pdf_name = "report_{$group['id']}.pdf";
-                return view("pdf.report", compact("group", "categories", "reports_settings", "info_settings", "type", "barcode_settings"));
+                // Generate PDF not yet working
+                $pdf = PDF::loadView("pdf.report", compact("group", "categories", "reports_settings", "info_settings", "type", "barcode_settings"));
                 break;
             case 2:
                 $group = $data;
                 \Log::info(['receiptData' => $group, 'reports_settings' => $reports_settings, 'info_settings' => $info_settings, 'barcode_settings' => $barcode_settings]);
                 $pdf_name = "receipt_{$group['id']}.pdf";
                 // Generate PDF not yet working
-                // $pdf = PDF::loadView("pdf.receipt", compact("group", "reports_settings", "info_settings", "type", "barcode_settings"));
-                return view("pdf.receipt", compact("group", "reports_settings", "info_settings", "type", "barcode_settings"));
+                $pdf = PDF::loadView("pdf.receipt", compact("group", "reports_settings", "info_settings", "type", "barcode_settings"));
                 break;
             case 3:
                 $group = $data;

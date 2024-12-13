@@ -176,7 +176,6 @@ return [
         App\Providers\RouteServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yajra\DataTables\ButtonsServiceProvider::class,
-        RachidLaasri\LaravelInstaller\Providers\LaravelInstallerServiceProvider::class,
         Spatie\Activitylog\ActivitylogServiceProvider::class,
         App\Providers\MailServiceProvider::class,
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
