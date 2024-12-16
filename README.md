@@ -24,6 +24,11 @@ Before you begin, ensure you have the following installed on your system:
    Run the following command to build and start the Docker containers:
    ```bash
    docker-compose up --build
+   
+   ## If Fatal error: require(): Failed opening required '/var/www/vendor/autoload.php' (include_path='.:/usr/local/lib/php') has been encountered
+   **Run**
+   docker-compose run app composer install
+
    ```
    This will:
    - Build the `app` container based on the `Dockerfile`.
