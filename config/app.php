@@ -182,8 +182,6 @@ return [
         LaravelQRCode\Providers\QRCodeServiceProvider::class,     
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Webklex\PDFMerger\Providers\PDFMergerServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
-
     ],
 
     /*

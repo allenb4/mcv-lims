@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laravel7-php7.4
+    container_name: laravel7-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - "9000:9000"
+    command: php artisan serve --host=localhost --port=9000
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: laravel
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    depends_on:
+      - db
+      - phpmyadmin
+    networks:
+      - default
+
+  db:
+    image: mysql:8.0
+    container_name: mysql8
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - default
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    networks:
+      - default
+
+volumes:
+  dbdata:
+
+networks:
+  default:
+    driver: bridge
