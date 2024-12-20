@@ -13,7 +13,7 @@
         @endforeach
     </tbody>
 </table>
-<table class="table table-bordered sensitivity">
+<table class="table table-bordered sensitivity table-max-width">
     <thead class="test_head">
         <tr>
             <th>Name</th>

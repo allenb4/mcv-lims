@@ -1,4 +1,4 @@
-<table class="table test beak-page">
+<table class="table test break-page">
     <thead>
         <tr>
             <th class="test_title" align="center" colspan="5">

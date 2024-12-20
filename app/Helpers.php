@@ -79,7 +79,6 @@ if (!function_exists("generate_pdf")) {
                 $pdf_name = "receipt_{$group['id']}.pdf";
                 $view = "pdf.receipt";
                 $viewData = compact("group", "reports_settings", "info_settings", "type", "barcode_settings");
-                \Log::info(['receiptData' => $group, 'reports_settings' => $reports_settings, 'info_settings' => $info_settings, 'barcode_settings' => $barcode_settings]);
                 break;
         
             case 3:
@@ -118,7 +117,20 @@ if (!function_exists("generate_pdf")) {
         }
         
         if (isset($view) && isset($viewData)) {
-            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView($view, $viewData);
+            $html = view($view, $viewData)->render();
+
+            if ($type === 2 || $type === 1) {
+                $pdf = PDF::loadHTML($html);
+            } else {
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)
+                ->setPaper('legal', 'portrait')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isPhpEnabled' => true,
+                    'isHtml5MediaEnabled' => true
+                ]);
+            }
+        
             $file_path = public_path("uploads/pdf/{$pdf_name}");
         
             if (!file_exists(dirname($file_path))) {

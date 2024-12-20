@@ -511,10 +511,13 @@ class GroupsController extends Controller
         //save receipt pdf
         $group=Group::with([
             'tests',
+            'tests.test',
             'cultures', 
+            'cultures.culture', 
             'all_tests',
             'all_cultures',
             'packages',
+            'packages.package',
             'patient',
             'doctor',
             'branch',

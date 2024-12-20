@@ -184,7 +184,7 @@ class MedicalReportsController extends Controller
      */
     public function pdf(Request $request,$id)
     {
-        $group=Group::findOrFail($id);
+        $group=Group::with(['branch'])->findOrFail($id);
 
         if($group['uploaded_report'])
         {
@@ -231,14 +231,10 @@ class MedicalReportsController extends Controller
 
 
         //generate pdf
-        $data=['group'=>$group,'categories'=>$categories];
-        \Log::info(['GENERATE REPORT PDF' => $data]);
+        $data=['group'=>$group,'categories'=>$categories->toArray()];
 
-        // GENERATE PDF is not yet working
         $pdf=generate_pdf($data);
-        // dd($pdf);
-        // return redirect($pdf);//return pdf url
-        return $pdf;//return pdf url
+        return redirect()->away($pdf);
     }
 
     /**
@@ -250,7 +246,7 @@ class MedicalReportsController extends Controller
      */
     public function print_report($id)
     {
-        $group=Group::findOrFail($id);
+        $group=Group::with(['branch'])->findOrFail($id);
 
         if($group['uploaded_report'])
         {
@@ -398,7 +394,7 @@ class MedicalReportsController extends Controller
 
         // Generate Medical Report PDF is not working properly
         $pdf=generate_pdf([
-            'categories'=>$categories,
+            'categories'=>$categories->toArray(),
             'group'=>$group,
         ]);
 
@@ -488,7 +484,7 @@ class MedicalReportsController extends Controller
         }
 
         $pdf=generate_pdf([
-            'categories'=>$categories,
+            'categories'=>$categories->toArray(),
             'group'=>$group,
         ]);
 
@@ -545,7 +541,7 @@ class MedicalReportsController extends Controller
 
             $pdf=generate_pdf([
                 'group'=>$group,
-                'categories'=>$categories
+                'categories'=>$categories->toArray()
             ]);
 
             if(isset($pdf))
@@ -695,7 +691,7 @@ class MedicalReportsController extends Controller
             }
 
             $pdf_url=generate_pdf([
-                'categories'=>$categories,
+                'categories'=>$categories->toArray(),
                 'group'=>$group,
             ]);
 
@@ -766,7 +762,7 @@ class MedicalReportsController extends Controller
 
                 $pdf=generate_pdf([
                     'group'=>$group,
-                    'categories'=>$categories
+                    'categories'=>$categories->toArray()
                 ]);
 
                 if(isset($pdf))
