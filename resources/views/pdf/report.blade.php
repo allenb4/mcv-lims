@@ -6,9 +6,12 @@
     <title>{{__('Report')}}-#{{$group['id']}}-{{date('Y-m-d')}}</title>
     <style>
         @page {
-            margin-top: 0px;
-            margin-right: 0px;
-            margin-left: 0px;
+            header: page-header;
+            footer: page-footer;
+
+            margin-top: 25%;
+            margin-right: 5%;
+            margin-left: 5%;
             margin-bottom: 0px;
         }
         body {
@@ -23,10 +26,7 @@
         .invoice-container {
             max-width: 700px;
             margin: 30px auto;
-            background: #fff;
-            border-radius: 10px;
             padding: 20px 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         .invoice-header {
             text-align: center;
@@ -175,10 +175,15 @@
             width: 100% !important;
         }
 
+        .page-number:before {
+            content: "Page " counter(page) " of " counter(pages);
+        }
+
     </style>
 </head>
 <body>
     <div class="invoice-container">
+        <htmlpageheader name="page-header">
         <div class="invoice-header">
             <h1><img src="{{public_path('img/logo.png')}}" alt="{{ $info_settings['name'] ?? '' }}" width='200'></h1>
             <p>{{ $group['branch']['address'] ?? '' }}</p>
@@ -263,6 +268,8 @@
                 </tr>
             </tbody>
         </table>
+        </htmlpageheader>
+
         
         <div class="printable">
             @foreach($categories as $index => $category) 
@@ -284,5 +291,37 @@
 
 
     </div>
+
+    <htmlpagefooter name="page-footer" class="page-footer">
+        <hr>
+        <table>
+            <tbody>
+                <tr>
+                    <td width="20%">
+                    </td>
+                    <td width="60%"></td>
+                    <td width="20%" align="center">
+                        @if(!empty($group['signed_by']))
+                            <p>
+                                {{-- <img src="{{public_path('uploads/signature/'.$group['signed_by_user']['signature'])}}" alt="" height="100"> --}} {{-- MUST INCLUDE SIGN IMAGE - For enhancement--}}
+                            </p>
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td width="20%">
+                    </td>
+                    <td width="60%"></td>
+                    <td width="20%" align="center">
+                        <p class="signature">
+                            {{__('Signature')}}
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>{{ $info_settings['name'] ?? '' }} | Address: {{ $group['branch']['address'] ?? '' }} | Phone: {{ $group['branch']['phone'] ?? '' }} | Email: {{$info_settings['email'] ?? ''}}</p>
+        <p class="page-number"></p>
+    </htmlpagefooter>
 </body>
 </html>

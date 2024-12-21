@@ -6,9 +6,12 @@
     <title>{{__('Receipt')}}-{{$group['id']}}-{{date('Y-m-d')}}</title>
     <style>
         @page {
-            margin-top: 0px;
-            margin-right: 0px;
-            margin-left: 0px;
+            header: page-header;
+            footer: page-footer;
+
+            margin-top: 25%;
+            margin-right: 5%;
+            margin-left: 5%;
             margin-bottom: 0px;
         }
         body {
@@ -24,9 +27,7 @@
             max-width: 700px;
             margin: 30px auto;
             background: #fff;
-            border-radius: 10px;
             padding: 20px 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         .invoice-header {
             text-align: center;
@@ -101,6 +102,7 @@
 </head>
 <body>
     <div class="invoice-container">
+        <htmlpageheader name="page-header">
         <div class="invoice-header">
             <h1><img src="{{public_path('img/logo.png')}}" alt="{{ $info_settings['name'] ?? '' }}" width='200'></h1>
             <p>{{ $group['branch']['address'] ?? '' }}</p>
@@ -185,6 +187,7 @@
                 </tr>
             </tbody>
         </table>
+        </htmlpageheader>
         
 
         <table class="invoice-table">
@@ -221,5 +224,12 @@
             <p>Thank you for trusting our diagnostic services!</p>
         </div>
     </div>
+
+
+    <htmlpagefooter name="page-footer" class="page-footer">
+        <hr>
+        <p>{{ $info_settings['name'] ?? '' }} | Address: {{ $group['branch']['address'] ?? '' }} | Phone: {{ $group['branch']['phone'] ?? '' }} | Email: {{$info_settings['email'] ?? ''}}</p>
+        <p class="page-number"></p>
+    </htmlpagefooter>
 </body>
 </html>
