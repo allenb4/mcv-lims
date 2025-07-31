@@ -1,0 +1,108 @@
+/* Constants for styling */
+.test_title {
+    font-size: 20px;
+    background-color: #dddddd;
+    border: 1px solid black !important;
+}
+
+.test_name {
+    color: #333333 !important;
+    font-size: 14px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.test_head th {
+    color: #000000 !important;
+    font-size: 16px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.unit {
+    color: #0000ff !important;
+    font-size: 12px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.reference_range {
+    color: #008000 !important;
+    font-size: 12px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.result {
+    color: #ff0000 !important;
+    font-size: 14px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.status {
+    color: #ff9900 !important;
+    font-size: 14px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.comment th,
+.comment td {
+    color: #333333 !important;
+    font-size: 12px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.antibiotic_name {
+    color: #666666 !important;
+    font-size: 12px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.sensitivity {
+    color: #cc0000 !important;
+    font-size: 12px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.commercial_name {
+    color: #0066cc !important;
+    font-size: 12px !important;
+    font-family: Arial, sans-serif !important;
+}
+
+.break-page {
+    page-break-inside: avoid !important;
+}
+
+.subtitle {
+    font-size: 15px;
+}
+
+.test {
+    margin-top: 20px;
+}
+
+.transparent {
+    border-color: white;
+}
+
+.transparent th {
+    border-color: white;
+}
+
+.test_head td,
+th {
+    border: 1px solid #dee2e6;
+}
+
+.no-border {
+    border-color: white;
+}
+
+.comment tr th,
+.comment tr td {
+    border-color: white !important;
+    vertical-align: top !important;
+    text-align: left;
+    padding: 0px !important;
+}
+
+.sensitivity {
+    margin-top: 20px;
+}

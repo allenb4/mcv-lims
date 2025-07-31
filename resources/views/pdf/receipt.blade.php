@@ -1,157 +1,235 @@
-@extends('layouts.pdf')
-@section('title')
-    {{__('Receipt')}}-{{$group['id']}}-{{date('Y-m-d')}}
-@endsection
-@section('content')
-<style>
-    .receipt_title td,th{
-        border-color: white;
-    }
-    .receipt_title .total{
-        background-color: #ddd;
-    }
-    .table th{
-        color:{{$reports_settings['test_head']['color']}}!important;
-        font-size:{{$reports_settings['test_head']['font-size']}}!important;
-        font-family:{{$reports_settings['test_head']['font-family']}}!important;
-    }
-    .total{
-        font-family:{{$reports_settings['test_head']['font-family']}}!important;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{__('Receipt')}}-{{$group['id']}}-{{date('Y-m-d')}}</title>
+    <style>
+        @page {
+            header: page-header;
+            footer: page-footer;
 
-    .due_date{
-        font-family:{{$reports_settings['test_head']['font-family']}}!important;
-    }
+            margin-top: 25%;
+            margin-right: 5%;
+            margin-left: 5%;
+            margin-bottom: 0px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            margin-top: 0px;
+            width: 100%;
+            margin-top: 0;
+        }
+        .invoice-container {
+            max-width: 700px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px 25px;
+        }
+        .invoice-header {
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+        .invoice-header h1 {
+            font-size: 28px;
+            margin: 0;
+            color: #444;
+        }
+        .invoice-header p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .invoice-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
 
-    .test_name{
-        color:{{$reports_settings['test_name']['color']}}!important;
-        font-size:{{$reports_settings['test_name']['font-size']}}!important;
-        font-family:{{$reports_settings['test_name']['font-family']}}!important;
-    }
-   
-</style>
+        .invoice-details-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
 
-<div class="invoice">
-    
-    <table class="table table-bordered" width="100%">
-        <thead>
-            <tr>
-                <th colspan="2" width="85%">{{__('Test Name')}}</th>
-                <th width="15%">{{__('Price')}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($group['tests'] as $test)
-            <tr>
-                <td colspan="2" class="print_title test_name">
-                    @if(isset($test['test'])) 
-                        {{$test['test']['name']}}
-                    @endif
-                </td>
-                <td>{{formated_price($test['price'])}}</td>
-            </tr>
-            @endforeach
+        .invoice-details-table td strong {
+            display: block;
+            font-weight: bold;
+        }
 
-            @foreach($group['cultures'] as $culture)
-            <tr>
-                <td colspan="2" class="print_title test_name">
-                    @if(isset($culture['culture']))
-                        {{$culture['culture']['name']}}
-                    @endif
-                </td>
-                <td>{{formated_price($culture['price'])}}</td>
-            </tr>
-            @endforeach
+        .invoice-details-table-value {
+            text-align: left !important;
+        }
 
-            @if(isset($group['packages']))
-                @foreach($group['packages'] as $package)
+        .invoice-table {
+            width: 100%;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .invoice-table th, .invoice-table td {
+            text-align: left;
+            padding: 10px 0;
+        }
+        .invoice-table th {
+            font-weight: bold;
+            color: #444;
+        }
+        .invoice-total {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 16px;
+            color: #444;
+        }
+        .invoice-total table {
+            margin-left: auto;
+            font-size: 16px;
+        }
+        .invoice-total td {
+            padding: 5px 10px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <htmlpageheader name="page-header">
+        <div class="invoice-header">
+            <h1><img src="{{public_path('img/logo.png')}}" alt="{{ $info_settings['name'] ?? '' }}" width='200'></h1>
+            <p>{{ $group['branch']['address'] ?? '' }}</p>
+        </div>
+
+        <table class="invoice-details-table">
+            <tbody>
                 <tr>
-                    <td colspan="2" class="print_title test_name">
-                        @if(isset($package['package']))
-                            {{$package['package']['name']}}
-                        @endif
-                        <ul>
-                            @foreach($package['tests'] as $test)
-                                <li>
-                                    {{$test['test']['name']}}
-                                </li>
-                            @endforeach
-                            @foreach($package['cultures'] as $culture)
-                                <li>
-                                    {{$culture['culture']['name']}}
-                                </li>
-                            @endforeach
-                        </ul>
+                    <td>
+                        <strong>{{ __('Barcode') }}:</strong>
                     </td>
-                    <td>{{formated_price($package['price'])}}</td>
+                    <td class='invoice-details-table-value'>
+                        {{$group['barcode']}}
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        @if($group['barcode'])
+                            <img src="data:image/png;base64,{{ DNS1D::getBarcodePNG($group['barcode'], $barcode_settings['type']) }}" alt="barcode" width="100" />
+                        @else
+                            ''
+                        @endif
+                    </td>
+                    <td>
+                    </td>
                 </tr>
-                @endforeach
-            @endif
+                <tr>
+                    <td>
+                        <strong>{{ __('Patient Code') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['patient']['code'] ?? '' }}
+                    </td>
 
-            <tr class="receipt_title border-top">
-                <td width="50%" class="no-right-border"></td>
-                <td class="total">
-                    <b>{{__('Subtotal')}}</b>
-                </td>
-                <td class="total">{{formated_price($group['subtotal'])}}</td>
-            </tr>
+                    <td>
+                        <strong>{{ __('Patient Name') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['patient']['name'] ?? '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>{{ __('Age') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['patient']['age'] ?? '' }}
+                    </td>
 
-            <tr class="receipt_title">
-                <td width="50%" class="no-right-border"></td>
-                <td class="total">
-                   <b>
-                        {{__('Discount')}}
-                   </b>
-                </td>
-                <td class="total">{{formated_price($group['discount'])}}</td>
-            </tr>
+                    <td>
+                        <strong>{{ __('Gender') }}:</strong> {{ __($group['patient']['gender'] ?? '') }}
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ __($group['patient']['gender'] ?? '') }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>{{ __('Doctor') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['doctor']['name'] ?? '' }}
+                    </td>
+                    <td>
+                        <strong>{{ __('Contract') }}:</strong> {{ $group['contract']['title'] ?? '' }}
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['contract']['title'] ?? '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>{{ __('Sample Collection') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['sample_collection_date'] ?? '' }}
+                    </td>
+                    <td>
+                        <strong>{{ __('Registration Date') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ date('Y-m-d H:i', strtotime($group['created_at'])) }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </htmlpageheader>
+        
 
-            <tr class="receipt_title">
-                <td width="50%" class="no-right-border"></td>
-                <td class="total">
-                    <b>{{__('Total')}}</b>
-                </td>
-                <td class="total">{{formated_price($group['total'])}}</td>
-            </tr>
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th colspan="2" width="85%">{{ __('Test Name') }}</th>
+                    <th width="15%">{{ __('Price') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @include('pdf.partials.test_list', ['tests' => $group['tests']])
+                @include('pdf.partials.culture_list', ['cultures' => $group['cultures']])
+                @include('pdf.partials.package_list', ['packages' => $group['packages']])
+            </tbody>
+        </table>
 
-            @if(isset($group['payments']))
-            <tr class="receipt_title">
-                <td width="50%" class="no-right-border"></td>
-                <td class="total">
-                    <b>
-                        {{__('Paid')}}
-                    </b>
-                    <br>
-                    @foreach($group['payments'] as $payment)
-                        {{formated_price($payment['amount'])}} 
-                        <b>{{__('On')}}</b>  
-                        {{$payment['date']}}
-                        <b>{{__('By')}}</b>  
-                        {{$payment['payment_method']['name']}}
-                        <br>
+        <div class="invoice-total">
+            <table>
+                <tbody>
+                    @foreach(['subtotal', 'discount', 'total', 'due'] as $field)
+                        <tr>
+                            <td style="text-align: right;"><strong>{{ ucfirst($field) }}:</strong></td>
+                            <td style="text-align: right;">{{ formated_price($group[$field]) }}</td>
+                        </tr>
                     @endforeach
-                </td>
-                <td class="total">
-                    @if(count($group['payments']))
-                        {{formated_price($group['paid'])}}
-                    @else 
-                        {{formated_price(0)}}
-                    @endif
-                </td>
-            </tr>
-            @endif
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Include payment section --}}
+        @include('pdf.partials.payment_section', ['payments' => $group['payments']])
+
+        <div class="footer">
+            <p>Thank you for trusting our diagnostic services!</p>
+        </div>
+    </div>
 
 
-            <tr class="receipt_title">
-                <td width="50%" class="no-right-border"></td>
-                <td class="total">
-                    <b>{{__('Due')}}</b>
-                </td>
-                <td class="total">{{formated_price($group['due'])}}</td>
-            </tr>
-
-        </tbody>
-    </table>
-</div>
-
-@endsection
+    <htmlpagefooter name="page-footer" class="page-footer">
+        <hr>
+        <p>{{ $info_settings['name'] ?? '' }} | Address: {{ $group['branch']['address'] ?? '' }} | Phone: {{ $group['branch']['phone'] ?? '' }} | Email: {{$info_settings['email'] ?? ''}}</p>
+        <p class="page-number"></p>
+    </htmlpagefooter>
+</body>
+</html>
