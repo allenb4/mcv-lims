@@ -66,49 +66,81 @@ if (!function_exists("generate_pdf")) {
         switch ($type) {
             case 1:
                 $group = $data['group'];
-                $categories = $data['categories'];
+                $categories = array_filter($data['categories'], function ($category) {
+                    return count($category['tests']) || count($category['cultures']);
+                });
                 $pdf_name = "report_{$group['id']}.pdf";
-                // Generate PDF not yet working
-                $pdf = PDF::loadView("pdf.report", compact("group", "categories", "reports_settings", "info_settings", "type", "barcode_settings"));
+                $view = "pdf.report";
+                $viewData = compact("group", "categories", "reports_settings", "info_settings", "type", "barcode_settings");
                 break;
+        
             case 2:
                 $group = $data;
-                \Log::info(['receiptData' => $group, 'reports_settings' => $reports_settings, 'info_settings' => $info_settings, 'barcode_settings' => $barcode_settings]);
                 $pdf_name = "receipt_{$group['id']}.pdf";
-                // Generate PDF not yet working
-                $pdf = PDF::loadView("pdf.receipt", compact("group", "reports_settings", "info_settings", "type", "barcode_settings"));
+                $view = "pdf.receipt";
+                $viewData = compact("group", "reports_settings", "info_settings", "type", "barcode_settings");
                 break;
+        
             case 3:
-                $group = $data;
                 $pdf_name = "accounting.pdf";
-                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView("pdf.accounting", compact("data", "reports_settings", "info_settings", "type"));
+                $view = "pdf.accounting";
+                $viewData = compact("data", "reports_settings", "info_settings", "type");
                 break;
+        
             case 4:
                 $pdf_name = "doctor_report.pdf";
-                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView("pdf.doctor_report", compact("data", "reports_settings", "info_settings", "type"));
+                $view = "pdf.doctor_report";
+                $viewData = compact("data", "reports_settings", "info_settings", "type");
                 break;
+        
             case 5:
                 $pdf_name = "supplier_report.pdf";
-                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView("pdf.supplier_report", compact("data", "reports_settings", "info_settings", "type"));
+                $view = "pdf.supplier_report";
+                $viewData = compact("data", "reports_settings", "info_settings", "type");
                 break;
+        
             case 6:
                 $pdf_name = "purchase_report.pdf";
-                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView("pdf.purchase_report", compact("data", "reports_settings", "info_settings", "type"));
+                $view = "pdf.purchase_report";
+                $viewData = compact("data", "reports_settings", "info_settings", "type");
                 break;
+        
             case 7:
                 $group = $data;
                 $pdf_name = "working_paper.pdf";
-                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView("pdf.working_paper", compact("data", "group", "reports_settings", "info_settings", "type"));
+                $view = "pdf.working_paper";
+                $viewData = compact("data", "group", "reports_settings", "info_settings", "type");
                 break;
+        
             default:
-                abort(404);
+                abort(404, 'Invalid report type');
         }
+        
+        if (isset($view) && isset($viewData)) {
+            $html = view($view, $viewData)->render();
 
-        if ($pdf) {
-            $pdf->save("uploads/pdf/{$pdf_name}");
+            if ($type === 2 || $type === 1) {
+                $pdf = PDF::loadHTML($html);
+            } else {
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)
+                ->setPaper('legal', 'portrait')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isPhpEnabled' => true,
+                    'isHtml5MediaEnabled' => true
+                ]);
+            }
+        
+            $file_path = public_path("uploads/pdf/{$pdf_name}");
+        
+            if (!file_exists(dirname($file_path))) {
+                mkdir(dirname($file_path), 0755, true);
+            }
+        
+            $pdf->save($file_path);
             return url("uploads/pdf/{$pdf_name}");
         }
-
+        
         return null;
     }
 }

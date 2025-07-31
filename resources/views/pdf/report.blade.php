@@ -1,298 +1,327 @@
-@extends('layouts.pdf')
-@section('title')
-    {{__('Report')}}-#{{$group['id']}}-{{date('Y-m-d')}}
-@endsection
-@section('content')
-<style>
-    .test_title{
-        font-size: 20px;
-        background-color: #dddddd;
-        border: 1px solid black!important;
-    }
-    .beak-page{
-        page-break-inside: avoid!important;
-    }
-    .subtitle{
-        font-size: 15px;
-    }
-   .test{
-       margin-top: 20px;
-    }
-    .transparent{
-        border-color: white;
-    }
-    .transparent th{
-        border-color: white;
-    }
-    .test_head td,th{
-        border: 1px solid #dee2e6;
-    }
-    .no-border{
-        border-color: white;
-    }
-    .comment tr th,.comment tr td{
-        border-color: white!important;
-        vertical-align: top!important;
-        text-align: left;
-        padding:0px!important;
-    }
-    .sensitivity{
-        margin-top: 20px;
-    }
-    .test_title{
-        color:{{$reports_settings['test_title']['color']}}!important;
-        font-size:{{$reports_settings['test_title']['font-size']}}px!important;
-        font-family:{{$reports_settings['test_title']['font-family']}}!important;
-    }
-    .test_name{
-        color:{{$reports_settings['test_name']['color']}}!important;
-        font-size:{{$reports_settings['test_name']['font-size']}}px!important;
-        font-family:{{$reports_settings['test_name']['font-family']}}!important;
-    }
-    .test_head th{
-        color:{{$reports_settings['test_head']['color']}}!important;
-        font-size:{{$reports_settings['test_head']['font-size']}}px!important;
-        font-family:{{$reports_settings['test_head']['font-family']}}!important;
-    }
-    .unit{
-        color:{{$reports_settings['unit']['color']}}!important;
-        font-size:{{$reports_settings['unit']['font-size']}}px!important;
-        font-family:{{$reports_settings['unit']['font-family']}}!important;
-    }
-    .reference_range{
-        color:{{$reports_settings['reference_range']['color']}}!important;
-        font-size:{{$reports_settings['reference_range']['font-size']}}px!important;
-        font-family:{{$reports_settings['reference_range']['font-family']}}!important;
-    }
-    .result{
-        color:{{$reports_settings['result']['color']}}!important;
-        font-size:{{$reports_settings['result']['font-size']}}px!important;
-        font-family:{{$reports_settings['result']['font-family']}}!important;
-    }
-    .status{
-        color:{{$reports_settings['status']['color']}}!important;
-        font-size:{{$reports_settings['status']['font-size']}}px!important;
-        font-family:{{$reports_settings['status']['font-family']}}!important;
-    }
-    .comment th,.comment td{
-        color:{{$reports_settings['comment']['color']}}!important;
-        font-size:{{$reports_settings['comment']['font-size']}}px!important;
-        font-family:{{$reports_settings['comment']['font-family']}}!important;
-    }
-    .antibiotic_name{
-        color:{{$reports_settings['antibiotic_name']['color']}}!important;
-        font-size:{{$reports_settings['antibiotic_name']['font-size']}}px!important;
-        font-family:{{$reports_settings['antibiotic_name']['font-family']}}!important;
-    }
-    .sensitivity{
-        color:{{$reports_settings['sensitivity']['color']}}!important;
-        font-size:{{$reports_settings['sensitivity']['font-size']}}px!important;
-        font-family:{{$reports_settings['sensitivity']['font-family']}}!important;
-    }
-    .commercial_name{
-        color:{{$reports_settings['commercial_name']['color']}}!important;
-        font-size:{{$reports_settings['commercial_name']['font-size']}}px!important;
-        font-family:{{$reports_settings['commercial_name']['font-family']}}!important;
-    }
-</style>
-<div class="printable">
-    @php 
-        $count_categories=0
-    @endphp
-    @foreach($categories as $category)
-        @if(count($category['tests'])||count($category['cultures']))
-            @php 
-                $count_categories++;
-                $count=0;
-            @endphp
-            @if($count_categories>1)
-                <pagebreak>
-                </pagebreak>
-            @endif
-            <h4 class="test_title" align="center">
-                {{$category['name']}}
-            </h4>
-            @if(count($category['tests']))
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{__('Report')}}-#{{$group['id']}}-{{date('Y-m-d')}}</title>
+    <style>
+        @page {
+            header: page-header;
+            footer: page-footer;
+
+            margin-top: 25%;
+            margin-right: 5%;
+            margin-left: 5%;
+            margin-bottom: 0px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            margin-top: 0px;
+            width: 100%;
+            margin-top: 0;
+        }
+        .invoice-container {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px 25px;
+        }
+        .invoice-header {
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+        .invoice-header h1 {
+            font-size: 28px;
+            margin: 0;
+            color: #444444;
+        }
+        .invoice-header p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .invoice-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .invoice-details-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .invoice-details-table td strong {
+            display: block;
+            font-weight: bold;
+        }
+
+        .invoice-details-table-value {
+            text-align: left !important;
+        }
+
+        /* Constants for styling */
+        .test_title {
+            font-size: 20px;
+            border-top: 1px solid #e0e0e0 !important;
+            border-bottom: 1px solid #e0e0e0 !important;
+
+        }
+
+        .test_name {
+            color: #333333 !important;
+            font-size: 14px !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .test_head th {
+            color: #000000 !important;
+            font-size: 16px !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .unit {
+            color: #0000ff !important;
+            font-size: 12px !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .reference_range {
+            color: #008000 !important;
+            font-size: 12px !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .result {
+            color: #444444 !important;
+            font-size: 14px !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .status {
+            color: #444444 !important;
+            font-size: 14px !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .comment th,
+        .comment td {
+            color: #333333 !important;
+            font-size: 12px !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .antibiotic_name {
+            color: #666666 !important;
+            font-size: 12px !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .sensitivity {
+            color: #cc0000 !important;
+            font-size: 12px !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .commercial_name {
+            color: #0066cc !important;
+            font-size: 12px !important;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .break-page {
+            page-break-inside: avoid !important;
+        }
+
+        .subtitle {
+            font-size: 15px;
+        }
+
+        .test {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .transparent {
+            border-color: white;
+        }
+
+        .transparent th {
+            border-color: white;
+        }
+
+        .no-border {
+            border-color: white;
+        }
+
+        .comment tr th,
+        .comment tr td {
+            border-color: white !important;
+            vertical-align: top !important;
+            text-align: left;
+            padding: 0px !important;
+        }
+
+        .sensitivity {
+            margin-top: 20px;
+        }
+
+        .table-max-width {
+            width: 100% !important;
+        }
+
+        .page-number:before {
+            content: "Page " counter(page) " of " counter(pages);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <htmlpageheader name="page-header">
+        <div class="invoice-header">
+            <h1><img src="{{public_path('img/logo.png')}}" alt="{{ $info_settings['name'] ?? '' }}" width='200'></h1>
+            <p>{{ $group['branch']['address'] ?? '' }}</p>
+        </div>
+
+        <table class="invoice-details-table">
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>{{ __('Barcode') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{$group['barcode']}}
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        @if($group['barcode'])
+                            <img src="data:image/png;base64,{{ DNS1D::getBarcodePNG($group['barcode'], $barcode_settings['type']) }}" alt="barcode" width="100" />
+                        @else
+                            ''
+                        @endif
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>{{ __('Patient Code') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['patient']['code'] ?? '' }}
+                    </td>
+
+                    <td>
+                        <strong>{{ __('Patient Name') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['patient']['name'] ?? '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>{{ __('Age') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['patient']['age'] ?? '' }}
+                    </td>
+
+                    <td>
+                        <strong>{{ __('Gender') }}:</strong> {{ __($group['patient']['gender'] ?? '') }}
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ __($group['patient']['gender'] ?? '') }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>{{ __('Doctor') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['doctor']['name'] ?? '' }}
+                    </td>
+                    <td>
+                        <strong>{{ __('Contract') }}:</strong> {{ $group['contract']['title'] ?? '' }}
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['contract']['title'] ?? '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>{{ __('Sample Collection') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ $group['sample_collection_date'] ?? '' }}
+                    </td>
+                    <td>
+                        <strong>{{ __('Registration Date') }}:</strong>
+                    </td>
+                    <td class='invoice-details-table-value'>
+                        {{ date('Y-m-d H:i', strtotime($group['created_at'])) }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </htmlpageheader>
+
+        
+        <div class="printable">
+            @foreach($categories as $index => $category) 
+                <h4 class="test_title" align="center">{{ $category['name'] }}</h4>
+                
                 @foreach($category['tests'] as $test)
-                    @php 
-                        $count++;
-                    @endphp
-                    <table class="table test beak-page">
-                        <thead>
-                            <tr>
-                                <th  class="test_title" align="center" colspan="5">
-                                    <h5>{{$test['test']['name']}}</h5>
-                                </th>
-                            </tr>
-                            <tr class="transparent">
-                                <th colspan="5"></th>
-                            </tr>
-                            <tr class="test_head">
-                                <th width="30%" class="text-left">Test</th>
-                                <th width="17.5%">Result</th>
-                                <th width="17.5%">Unit</th>
-                                <th width="17.5%">Normal Range</th>
-                                <th width="17.5%">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-bordered">
-                            @foreach($test["results"] as $result)
-                                <!-- Title -->
-                                @if(isset($result['component']))
-                                    @if($result['component']['title'])
-                                        <tr>
-                                            <td colspan="5" class="component_title test_name">
-                                                <b>{{$result['component']['name']}}</b>
-                                            </td>
-                                        </tr>
-                                    @else
-                                    <tr>
-                                        <td class="text-captitalize test_name">{{$result["component"]["name"]}}</td>
-                                        <td align="center" class="result">{{$result["result"]}}</td>
-                                        <td align="center" class="unit">{{$result["component"]["unit"]}}</td>
-                                        <td align="left" class="reference_range">
-                                            {!! $result["component"]["reference_range"] !!}
-                                        </td>
-                                        <td align="center" class="status">
-                                            {{$result['status']}}
-                                        </td>
-                                    </tr>
-                                    @endif
-                                @endif
-                            @endforeach
-                            <!-- Comment -->
-                            @if(isset($test['comment']))
-                                <tr class="comment">
-                                    <td colspan="5">
-                                        <table class="comment">
-                                            <tbody>
-                                                <tr>
-                                                    <th width="80px">
-                                                        <b>Comment :</b>
-                                                    </th>
-                                                    <td>
-                                                        {!! str_replace("\n", '<br />',  $test['comment']) !!}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            @endif 
-                            <!-- /comment -->
-                        </tbody>
-                    </table>
+                    @include('pdf.partials.test', ['test' => $test, 'reportSettings' => $reports_settings])
                 @endforeach
-            @endif
-
-            @if(count($category['cultures']))
+        
                 @foreach($category['cultures'] as $culture)
-                    @php 
-                        $count++;
-                    @endphp
-                    @if($count>1)
-                    <pagebreak>
-                    @endif
-                    <!-- culture title -->
-                    <h5 class="test_title" align="center">
-                        {{$culture['culture']['name']}}
-                    </h5>
-                    <!-- /culture title -->
-
-                    <!-- culture options -->
-                    <table class="table" width="100%">
-                        <tbody>
-                            @foreach($culture['culture_options'] as $culture_option)
-                                @if(isset($culture_option['value'])&&isset($culture_option['culture_option']))
-                                    <tr>
-                                        <th class="no-border test_name" width="10px" nowrap="nowrap" align="left">
-                                            <span class="option_title">{{$culture_option['culture_option']['value']}} :</span>
-                                        </th>
-                                        <td class="no-border result">
-                                            {{$culture_option['value']}}
-                                        </td>
-                                    </tr>
-                                @endif
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <!-- /culture options -->
-
-                    <!-- sensitivity -->
-                    <table class="table table-bordered sensitivity" width="100%">
-                        <thead class="test_head">
-                            <tr>
-                                <th align="left">Name</th>
-                                <th align="center">Sensitivity</th>
-                                <th align="left">Commercial name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($culture['high_antibiotics'] as $antibiotic)
-                                <tr>
-                                    <td width="200px" nowrap="nowrap" align="left" class="antibiotic_name">
-                                        {{$antibiotic['antibiotic']['name']}}
-                                    </td>
-                                    <td width="120px" nowrap="nowrap" align="center" class="sensitivity">
-                                        {{$antibiotic['sensitivity']}}
-                                    </td>
-                                    <td class="commercial_name">
-                                        {{$antibiotic['antibiotic']['commercial_name']}}
-                                    </td>
-                                </tr>
-                            @endforeach
-
-                            @foreach($culture['moderate_antibiotics'] as $antibiotic)
-                                <tr>
-                                    <td width="200px" nowrap="nowrap" align="left">
-                                        {{$antibiotic['antibiotic']['name']}}
-                                    </td>
-                                    <td width="120px" nowrap="nowrap" align="center">
-                                        {{$antibiotic['sensitivity']}}
-                                    </td>
-                                    <td>
-                                        {{$antibiotic['antibiotic']['commercial_name']}}
-                                    </td>
-                                </tr>
-                            @endforeach
-
-                            @foreach($culture['resident_antibiotics'] as $antibiotic)
-                            <tr>
-                                <td width="200px" nowrap="nowrap" align="left">
-                                    {{$antibiotic['antibiotic']['name']}}
-                                </td>
-                                <td width="120px" nowrap="nowrap" align="center">
-                                    {{$antibiotic['sensitivity']}}
-                                </td>
-                                <td>
-                                    {{$antibiotic['antibiotic']['commercial_name']}}
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                    <!-- Comment -->
-                    @if(isset($culture['comment']))
-                    <table width="100%"  class="comment">
-                        <tbody>
-                            <tr>
-                                <td width="10px" nowrap="nowrap no-border"><b>Comment</b> :</td>
-                                <td>
-                                    {!! str_replace("\n", '<br />',  $culture['comment']) !!}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>     
-                    @endif
-                    <!-- /comment -->
-                    @if($count>1)
-                    </pagebreak>
-                    @endif
+                    @include('pdf.partials.culture', ['culture' => $culture, 'reportSettings' => $reports_settings])
                 @endforeach
-            @endif
-        @endif
-    @endforeach
+        
+                @if($index < count($categories) - 1)
+                    <pagebreak></pagebreak>
+                @endif
+            @endforeach
+        </div>
 
-</div>
-@endsection
+
+    </div>
+
+    <htmlpagefooter name="page-footer" class="page-footer">
+        <hr>
+        <table>
+            <tbody>
+                <tr>
+                    <td width="20%">
+                    </td>
+                    <td width="60%"></td>
+                    <td width="20%" align="center">
+                        @if(!empty($group['signed_by']))
+                            <p>
+                                {{-- <img src="{{public_path('uploads/signature/'.$group['signed_by_user']['signature'])}}" alt="" height="100"> --}} {{-- MUST INCLUDE SIGN IMAGE - For enhancement--}}
+                            </p>
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td width="20%">
+                    </td>
+                    <td width="60%"></td>
+                    <td width="20%" align="center">
+                        <p class="signature">
+                            {{__('Signature')}}
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>{{ $info_settings['name'] ?? '' }} | Address: {{ $group['branch']['address'] ?? '' }} | Phone: {{ $group['branch']['phone'] ?? '' }} | Email: {{$info_settings['email'] ?? ''}}</p>
+        <p class="page-number"></p>
+    </htmlpagefooter>
+</body>
+</html>
